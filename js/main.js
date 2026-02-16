@@ -53,14 +53,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // ---------- Contact Form (placeholder — no backend) ----------
-  const contactForm = document.querySelector('.contact__form form');
-  if (contactForm) {
-    contactForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-      alert('Thank you for your enquiry! We will be in touch soon.');
-      contactForm.reset();
-    });
-  }
+
 
 });

@@ -74,8 +74,8 @@
                         <div class="form-group">
                             <textarea name="message" placeholder="Tell us more about your day..."></textarea>
                         </div>
-                        <button type="submit" class="btn">Send</button>
-                        <p id="contact-status"></p>
+                        <button type="submit" class="btn" id="contact-submit">Send</button>
+                        <p id="contact-status" style="margin-top: 15px; font-weight: 500; min-height: 24px;"></p>
                     </form>
                     <div class="contact__details">
                         <p>📞 <a href="tel:+4407891876023">07891 876 023</a></p>
@@ -100,10 +100,18 @@
     <script src="js/main.js"></script>
     <script>
         var form = document.getElementById("contact-form");
+        var button = document.getElementById("contact-submit");
+        var status = document.getElementById("contact-status");
 
         async function handleSubmit(event) {
             event.preventDefault();
-            var status = document.getElementById("contact-status");
+
+            // UI Feedback
+            button.disabled = true;
+            button.textContent = "Sending...";
+            status.innerHTML = "";
+            status.style.color = "inherit";
+
             var data = new FormData(event.target);
             fetch(event.target.action, {
                 method: form.method,
@@ -112,11 +120,16 @@
                     'Accept': 'application/json'
                 }
             }).then(response => {
+                button.disabled = false;
+                button.textContent = "Send";
+
                 if (response.ok) {
-                    status.innerHTML = "Thanks for your submission!";
+                    status.innerHTML = "Thanks for your submission! We'll be in touch soon.";
+                    status.style.color = "#2e7d32"; // Green
                     form.reset()
                 } else {
                     response.json().then(data => {
+                        status.style.color = "#c62828"; // Red
                         if (Object.hasOwn(data, 'errors')) {
                             status.innerHTML = data["errors"].map(error => error["message"]).join(", ")
                         } else {
@@ -125,6 +138,9 @@
                     })
                 }
             }).catch(error => {
+                button.disabled = false;
+                button.textContent = "Send";
+                status.style.color = "#c62828"; // Red
                 status.innerHTML = "Oops! There was a problem submitting your form"
             });
         }
