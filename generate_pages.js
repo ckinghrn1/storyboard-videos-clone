@@ -5,18 +5,51 @@ const path = require('path');
 const templatePath = path.join(__dirname, 'location_template.html');
 const outputDir = __dirname; // Root directory for HTML files
 
-// List of locations to target
-const locations = [
-    'London', 'Essex', 'Surrey', 'Kent', 'Hampshire', 'Sussex',
-    'East Sussex', 'West Sussex', 'Hertfordshire', 'Buckinghamshire',
-    'Berkshire', 'Oxfordshire', 'Suffolk', 'Norfolk', 'Cambridgeshire',
-    'Brighton', 'Bristol', 'Bath', 'Cotswolds', 'Cornwall', 'Devon',
-    'Dorset', 'Somerset', 'Wiltshire', 'Gloucestershire', 'Chelmsford',
-    'Colchester', 'Southend', 'Canterbury', 'Maidstone', 'Tunbridge Wells',
-    'Guildford', 'Woking', 'Reading', 'Windsor', 'Oxford', 'Cambridge',
-    'Norwich', 'Ipswich', 'Southampton', 'Portsmouth', 'Winchester',
-    'Chichester', 'Bournemouth', 'Exeter', 'Plymouth'
-];
+// Venue Mappings
+const venueData = {
+    'London': ['The Savoy', 'Kew Gardens', 'The Shard', 'Natural History Museum', 'The Ned', 'Syon Park', 'Pembroke Lodge'],
+    'Essex': ['Braxted Park', 'Gosfield Hall', 'Leez Priory', 'Hedingham Castle', 'Houchins', 'Crondon Park', 'Vaulty Manor', 'High House', 'Wivenhoe House', 'Hylands Estate', 'Boreham House'],
+    'Surrey': ['Warren House', 'Coltsford Mill', 'Burningfold Manor', 'Botleys Mansion', 'Northbrook Park', 'Bury Court Barn', 'Cain Manor', 'Farnham Castle', 'Morden Hall'],
+    'Kent': ['Penshurst Place', 'Chilston Park', 'Leeds Castle', 'Preston Court', 'Cooling Castle Barn', 'Hever Castle', 'Bradbourne House', 'The Ferry House', 'Eastwell Manor'],
+    'Hampshire': ['Syrencot', 'Rhinefield House', 'Oakley Hall', 'Clock Barn', 'The Tithe Barn', 'Froyle Park', 'The Elvetham', 'Bombay Sapphire Distillery', 'Lainston House'],
+    'Sussex': ['Nymans', 'South Lodge', 'Pelham House', 'Southend Barns', 'Upwaltham Barns', 'Cissbury Barns', 'Cowdray', 'Two Woods Estate'],
+    'East Sussex': ['Pelham House', 'Stanmer House', 'The Grand Brighton', 'Wadhurst Castle'],
+    'West Sussex': ['Nymans', 'South Lodge', 'Southend Barns', 'Upwaltham Barns', 'Cissbury Barns', 'Cowdray'],
+    'Buckinghamshire': ['Hedsor House', 'Notley Abbey', 'Waddesdon Estate', 'Danesfield House', 'The Kings Chapel', 'Woughton House', 'Chartridge Lodge'],
+    'Berkshire': ['Wasing Park', 'Taplow House', 'Highfield Park', 'Trunkwell House', 'Stanlake Park', 'Coworth Park', 'Cliveden House'],
+    'Hertfordshire': ['Coltsfoot Country Retreat', 'Milling Barn', 'Offley Place', 'Hatfield House', 'Fanhams Hall', 'Knebworth House', 'Ashridge House', 'Micklefield Hall'],
+    'Oxfordshire': ['Lains Barn', 'Oxford Town Hall', 'Bodleian Libraries', 'Caswell House', 'Tythe Barn Launton', 'Merriscourt', 'Blenheim Palace', 'Kirtlington Park'],
+    'Suffolk': ['Hengrave Hall', 'Glemham Hall', 'Woodhall Manor', 'Bruisyard Country Estate', 'Hintlesham Hall'],
+    'Norfolk': ['Chaucer Barn', 'Applewood Hall', 'Blickling Estate'],
+    'Cambridgeshire': ['Holmewood Hall', 'Bassmead Manor Barns', 'The Old Hall Ely', 'Swynford Manor'],
+    'Bristol': ['Leigh Court', 'Avon Gorge', 'Arnos Vale', 'Berwick Lodge', 'Bristol Museum'],
+    'Cotswolds': ['Barnsley House', 'Cripps Barn', 'Stone Barn', 'Caswell House', 'Cowley Manor'],
+    'Devon': ['Rockbeare Manor', 'Pynes House', 'Huntsham Court', 'Upton Barn', 'Deer Park'],
+    'Cornwall': ['Tredudwell Manor', 'Tregenna Castle', 'Boconnoc', 'Polhawn Fort', 'Lusty Glaze'],
+    'Dorset': ['Lulworth Castle', 'The Italian Villa', 'Highcliffe Castle', 'Athelhampton House'],
+    'Bournemouth': ['The Royal Bath', 'The Green House', 'The Connaught'],
+    'Chichester': ['Farbridge', 'Southend Barns', 'The Guildhall'],
+    'Winchester': ['The Great Hall', 'Lainston House', 'Hotel du Vin'],
+    'Southampton': ['Holiday Inn Eastleigh', 'Southampton Harbour Hotel'],
+    'Portsmouth': ['Spinnaker Tower', 'Portsmouth Guildhall', 'Southsea Castle'],
+    'Canterbury': ['Canterbury Cathedral Lodge', 'The PIG-at Bridge Place'],
+    'Maidstone': ['Leeds Castle', 'Nettlestead Place', 'The Orangery', 'Bradbourne House'],
+    'Colchester': ['Colchester Castle', 'St Osyth Priory', 'Wivenhoe House', 'Layer Marney Tower'],
+    'Chelmsford': ['Leez Priory', 'Hylands Estate', 'Boreham House', 'Pontlands Park']
+};
+
+const locations = Object.keys(venueData);
+
+// Add sub-locations if not already in venueData (copy from parent or default)
+const subLocations = ['Somerset', 'Wiltshire', 'Gloucestershire', 'Suffolk', 'Norfolk', 'Norwich', 'Ipswich', 'Reading', 'Windsor', 'Oxford', 'Cambridge', 'Bath', 'Brighton', 'Southampton', 'Plymouth', 'Exeter', 'Southend', 'Tunbridge Wells', 'Guildford', 'Woking'];
+subLocations.forEach(loc => {
+    if (!venueData[loc]) {
+        venueData[loc] = ['Beautiful Local Venues', 'Stunning Country Estates', 'Historic Town Halls'];
+    }
+});
+
+// Refresh locations list
+const finalLocations = Object.keys(venueData);
 
 // Image assets to rotate through to keep pages looking slightly different
 const heroImages = [
@@ -53,9 +86,9 @@ function getRandom(arr) {
 // Read Template
 let template = fs.readFileSync(templatePath, 'utf8');
 
-console.log(`Generating ${locations.length} location pages...`);
+console.log(`Generating ${finalLocations.length} enhanced location pages...`);
 
-locations.forEach(loc => {
+finalLocations.forEach(loc => {
     let content = template;
 
     // Create specific filename SEO friendly
@@ -75,8 +108,10 @@ locations.forEach(loc => {
     content = content.replace(/{{VimeoID1}}/g, getRandom(vimeoIds));
     content = content.replace(/{{VimeoID2}}/g, getRandom(vimeoIds));
 
-    // Select a venue placeholder if we wanted to get fancy, but for now generic is fine
-    // The template has "At Storyboard, we specialise..."
+    // Replace Venue List
+    const venues = venueData[loc] || [];
+    const venueHtml = venues.map(v => `<span style="padding: 10px 20px; background: #fff; border: 1px solid #eee; border-radius: 5px; font-weight: 500;">${v}</span>`).join('\n');
+    content = content.replace(/{{VenueList}}/g, venueHtml);
 
     // Write File
     fs.writeFileSync(path.join(outputDir, filename), content);
@@ -98,25 +133,13 @@ const baseUrl = 'https://storyboardvideos.co.uk'; // Update this if domain chang
 // Add main pages
 const mainPages = ['index.html', 'about-us.html', 'pricing.html', 'portfolio.html', 'contact.html', 'blog.html'];
 mainPages.forEach(page => {
-    sitemapContent += `  <url>
-    <loc>${baseUrl}/${page}</loc>
-    <lastmod>${today}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-`;
+    sitemapContent += `  <url><loc>${baseUrl}/${page}</loc><lastmod>${today}</lastmod><priority>0.8</priority></url>\n`;
 });
 
 // Add location pages
-locations.forEach(loc => {
+finalLocations.forEach(loc => {
     const filename = `wedding-videographer-${loc.toLowerCase().replace(/ /g, '-')}.html`;
-    sitemapContent += `  <url>
-    <loc>${baseUrl}/${filename}</loc>
-    <lastmod>${today}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-`;
+    sitemapContent += `  <url><loc>${baseUrl}/${filename}</loc><lastmod>${today}</lastmod><priority>0.9</priority></url>\n`;
 });
 
 sitemapContent += sitemapEnd;
