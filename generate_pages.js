@@ -74,10 +74,8 @@ const contactImages = [
     'assets/images/dani_ben_wedding-629.jpg'
 ];
 
-// Vimeo IDs to rotate (replace with actual specific videos if available later)
-const vimeoIds = [
-    '876543210', '123456789', '987654321', '567890123'
-];
+// Vimeo IDs (Real IDs from Portfolio)
+const vimeoIds = ['843176714', '843191090', '701203514', '843200654', '776693718'];
 
 function getRandom(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
