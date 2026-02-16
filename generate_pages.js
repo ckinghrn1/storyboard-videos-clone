@@ -75,7 +75,7 @@ const contactImages = [
 ];
 
 // Vimeo IDs (Real IDs from Portfolio)
-const vimeoIds = ['843176714', '843191090', '701203514', '843200654', '776693718'];
+const vimeoIds = ['843176714', '843191090', '701203514', '843200654', '776693718', '649163822', '585845113', '731102920'];
 
 function getRandom(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
