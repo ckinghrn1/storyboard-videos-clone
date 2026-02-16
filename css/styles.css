@@ -817,24 +817,59 @@ p {
 .footer {
     background: var(--color-primary);
     color: var(--color-white);
-    padding: 40px;
-    text-align: center;
+    padding: 60px 40px 30px;
+    text-align: left;
+}
+
+.footer__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    margin-bottom: 40px;
 }
 
 .footer__cta {
     font-family: var(--font-heading);
     font-size: 2.5rem;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     letter-spacing: 4px;
     color: var(--color-white);
+    line-height: 1;
+}
+
+.footer h3 {
+    font-family: var(--font-ui);
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    opacity: 0.8;
+}
+
+.footer__links li {
+    margin-bottom: 10px;
+}
+
+.footer__links a {
+    color: var(--color-white);
+    opacity: 0.7;
+    font-size: 0.95rem;
+    transition: opacity 0.3s ease;
+}
+
+.footer__links a:hover {
+    opacity: 1;
+    text-decoration: underline;
 }
 
 .footer__copyright {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 30px;
     font-family: var(--font-ui);
     font-size: 0.75rem;
     letter-spacing: 2px;
     opacity: 0.6;
-    margin-top: 20px;
+    text-align: center;
 }
 
 .footer a {
